@@ -1,0 +1,71 @@
+" Source your .vimrc
+source ~/.vimrc
+
+" Leader
+let mapleader = " "
+
+" =====================
+" Refactor / Code intel
+" =====================
+nnoremap gr :action RenameElement<CR>
+nnoremap ga :action ShowIntentionActions<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap ge :action ShowErrorDescription<CR>
+
+" =====================
+" Search
+" =====================
+vnoremap <leader>/ :action FindSelectionInPath<CR>
+nnoremap <leader>/ :action FindInPath<CR>
+
+" =====================
+" Git
+" =====================
+nnoremap ]c :action VcsShowNextChangeMarker<CR>
+nnoremap [c :action VcsShowPrevChangeMarker<CR>
+nnoremap gb :action Annotate<CR>
+
+" =====================
+" Errors
+" =====================
+nnoremap ]e :action GotoNextError<CR>
+nnoremap [e :action GotoPreviousError<CR>
+
+" =====================
+" Files
+" =====================
+nnoremap <leader>n :action NewFile<CR>
+nnoremap <leader>r :action RecentFiles<CR>
+nnoremap <leader>f :action GotoFile<CR>
+
+"" -- Suggested options --
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=9999
+
+set ignorecase
+set smartcase
+
+" Do incremental searching.
+set incsearch
+
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+
+" Highlight copied text
+Plug 'machakann/vim-highlightedyank'
+" Commentary plugin
+Plug 'tpope/vim-commentary'
+
+
+"" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+"" Map \r to the Reformat Code action
+"map \r <Action>(ReformatCode)
+
+"" Map <leader>d to start debug
+"map <leader>d <Action>(Debug)
+
+"" Map \b to toggle the breakpoint on the current line
+"map \b <Action>(ToggleLineBreakpoint)

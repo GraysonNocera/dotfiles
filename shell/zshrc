@@ -1,0 +1,35 @@
+echo "hello from your .zshrc :)"
+
+# dotnet macOS dumbness
+export DYLD_FRAMEWORK_PATH=/System/Library/Frameworks
+
+export PATH=$PATH:/opt/homebrew
+
+export CPATH=/opt/homebrew/include
+export LIBRARY_PATH=/opt/homebrew/lib
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+autoload -Uz compinit && compinit
+
+# Function to get current git branch
+parse_git_branch() {
+  git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+# Colors
+RED="%F{red}"
+GREEN="%F{green}"
+BLUE="%F{blue}"
+YELLOW="%F{yellow}"
+RESET="%f"
+
+# Prompt:
+# %n = username
+# %m = host (short)
+# %~ = current working directory (relative to home)
+# $(parse_git_branch) = current git branch (if available)
+PROMPT='${GREEN}%n@%m ${BLUE}%~${YELLOW}$(if git rev-parse --is-inside-work-tree &>/dev/null; then echo " ("$(parse_git_branch)")"; fi)${RESET}
+$ '
+
