@@ -13,6 +13,12 @@ nnoremap gi :action GotoImplementation<CR>
 nnoremap ge :action ShowErrorDescription<CR>
 
 " =====================
+" GitHub Copilot
+" =====================
+nnoremap <leader>c :action ActivateGitHubCopilotChatToolWindow<CR>
+nnoremap <leader>h :action copilot.chat.inline<CR>
+
+" =====================
 " Search
 " =====================
 vnoremap <leader>/ :action FindSelectionInPath<CR>
@@ -65,7 +71,7 @@ Plug 'tpope/vim-commentary'
 "map \r <Action>(ReformatCode)
 
 "" Map <leader>d to start debug
-"map <leader>d <Action>(Debug)
+"" map <leader>d <Action>(Debug)
 
 "" Map \b to toggle the breakpoint on the current line
 "map \b <Action>(ToggleLineBreakpoint)
