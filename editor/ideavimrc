@@ -12,6 +12,9 @@ nnoremap ga :action ShowIntentionActions<CR>
 nnoremap gi :action GotoImplementation<CR>
 nnoremap ge :action ShowErrorDescription<CR>
 
+" Roll back current hunk (or line) under cursor
+nnoremap <leader>gu :action Vcs.RollbackChangedLines<CR>
+
 " =====================
 " GitHub Copilot
 " =====================
