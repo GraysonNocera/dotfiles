@@ -16,6 +16,7 @@ link() {
 }
 
 link "$DOTFILES/shell/zshrc"     "$HOME/.zshrc"
+link "$DOTFILES/shell/bashrc"  "$HOME/.bashrc"
 link "$DOTFILES/shell/tmux.conf"  "$HOME/.tmux.conf"
 link "$DOTFILES/editor/ideavimrc"  "$HOME/.ideavimrc"
 

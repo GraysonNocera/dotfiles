@@ -1,0 +1,38 @@
+echo "hello from your .bashrc :)"
+
+# dotnet macOS dumbness
+export DYLD_FRAMEWORK_PATH=/System/Library/Frameworks
+
+export PATH="$PATH:/opt/homebrew"
+
+export CPATH=/opt/homebrew/include
+export LIBRARY_PATH=/opt/homebrew/lib
+
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+
+HISTSIZE=10000
+HISTFILESIZE=10000
+HISTFILE=~/.bash_history
+
+# Enable history appending instead of overwriting
+shopt -s histappend
+
+# Colors (Bash uses \[ \] around non-printing characters)
+RED="\[\e[31m\]"
+GREEN="\[\e[32m\]"
+BLUE="\[\e[34m\]"
+YELLOW="\[\e[33m\]"
+RESET="\[\e[0m\]"
+
+# Function to get current git branch
+parse_git_branch() {
+  git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+# Prompt:
+# \u = username
+# \h = host (short)
+# \w = current working directory
+PS1="${GREEN}\u@\h ${BLUE}\w${YELLOW}\$(if git rev-parse --is-inside-work-tree &>/dev/null; then echo \" (\$(parse_git_branch))\"; fi)${RESET}\n$ "
+
