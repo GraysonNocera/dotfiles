@@ -1,3 +1,0 @@
-return {
-  "seblyng/roslyn.nvim",
-}
