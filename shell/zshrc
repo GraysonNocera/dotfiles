@@ -4,6 +4,7 @@ echo "hello from your .zshrc :)"
 export DYLD_FRAMEWORK_PATH=/System/Library/Frameworks
 
 export PATH=$PATH:/opt/homebrew
+export PATH=$PATH:$HOME/Library/Python/3.9/bin
 
 export CPATH=/opt/homebrew/include
 export LIBRARY_PATH=/opt/homebrew/lib

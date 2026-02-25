@@ -40,6 +40,9 @@ nnoremap gb :action Annotate<CR>
 nnoremap ]e :action GotoNextError<CR>
 nnoremap [e :action GotoPreviousError<CR>
 
+" Use = to format the current file with dotnet csharpier
+nnoremap = :w<CR>:!dotnet csharpier %<CR>:e!<CR>
+
 " =====================
 " Files
 " =====================
