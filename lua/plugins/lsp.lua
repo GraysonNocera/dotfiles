@@ -13,6 +13,15 @@ return {
           },
         },
         gh_actions_ls = {},
+        helm_ls = {
+          settings = {
+            ["helm-ls"] = {
+              yamlls = {
+                path = "yaml-language-server",
+              },
+            },
+          },
+        },
       },
     },
   },
