@@ -17,3 +17,9 @@ git clone https://github.com/GraysonNocera/dotfiles.git && cd ./dotfiles
 chmod +x ./install && ./install
 ```
 In the event of a conflict, the script will create a `$file.bak` backup in the same location.
+
+## Installing TMUX
+1. Install the package manager:
+```bash 
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
