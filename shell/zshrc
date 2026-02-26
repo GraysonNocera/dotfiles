@@ -12,6 +12,10 @@ export LIBRARY_PATH=/opt/homebrew/lib
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+if [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+  export SSH_AUTH_SOCK=$(ls -t /tmp/ssh-*/agent.* 2>/dev/null | head -n1)
+fi
+
 autoload -Uz compinit && compinit
 
 setopt PROMPT_SUBST
