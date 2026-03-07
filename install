@@ -12,6 +12,7 @@ link() {
     mv "$dest" "$dest.bak"
   fi
 
+  echo "Linking $src -> $dest"
   ln -sf "$src" "$dest"
 }
 
@@ -19,10 +20,9 @@ link "$DOTFILES/shell/zshrc" "$HOME/.zshrc"
 link "$DOTFILES/shell/bashrc" "$HOME/.bashrc"
 link "$DOTFILES/shell/tmux.conf" "$HOME/.tmux.conf"
 link "$DOTFILES/editor/ideavimrc" "$HOME/.ideavimrc"
-link "$DOTFILES/ssh/rc" "$HOME/.ssh/rc"
+link "$DOTFILES/shell/ssh/rc" "$HOME/.ssh/rc"
 
 echo "Symlinked dotfiles successfully."
-ls -la $HOME | awk '/^l/ {print $9 " -> " $11}'
 
 # link "$DOTFILES/git/gitconfig"   "$HOME/.gitconfig"
 # link "$DOTFILES/vim/vimrc"       "$HOME/.vimrc"
