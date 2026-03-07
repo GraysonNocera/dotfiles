@@ -15,10 +15,11 @@ link() {
   ln -sf "$src" "$dest"
 }
 
-link "$DOTFILES/shell/zshrc"     "$HOME/.zshrc"
-link "$DOTFILES/shell/bashrc"  "$HOME/.bashrc"
-link "$DOTFILES/shell/tmux.conf"  "$HOME/.tmux.conf"
-link "$DOTFILES/editor/ideavimrc"  "$HOME/.ideavimrc"
+link "$DOTFILES/shell/zshrc" "$HOME/.zshrc"
+link "$DOTFILES/shell/bashrc" "$HOME/.bashrc"
+link "$DOTFILES/shell/tmux.conf" "$HOME/.tmux.conf"
+link "$DOTFILES/editor/ideavimrc" "$HOME/.ideavimrc"
+link "$DOTFILES/ssh/rc" "$HOME/.ssh/rc"
 
 echo "Symlinked dotfiles successfully."
 ls -la $HOME | awk '/^l/ {print $9 " -> " $11}'
