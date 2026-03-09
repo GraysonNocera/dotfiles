@@ -23,3 +23,14 @@ In the event of a conflict, the script will create a `$file.bak` backup in the s
 ```bash 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
+
+
+## Random commands run
+```
+brew install nvim
+
+dotnet tool install -g EasyDotnet
+
+brew tap omnisharp/omnisharp-roslyn
+brew update
+```
