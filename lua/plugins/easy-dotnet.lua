@@ -6,6 +6,10 @@ return {
       lsp = {
         enabled = false,
       },
+      test_runner = {
+        viewmode = "float", -- nice floating test window
+        enable_buffer_test_execution = true,
+      },
     })
   end,
 }
