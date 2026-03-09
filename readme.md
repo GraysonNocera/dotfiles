@@ -33,4 +33,7 @@ dotnet tool install -g EasyDotnet
 
 brew tap omnisharp/omnisharp-roslyn
 brew update
+
+brew tap homebrew/cask-fonts
+brew install --cask font-jetbrains-mono-nerd-font
 ```
