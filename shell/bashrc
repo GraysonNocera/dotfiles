@@ -11,6 +11,8 @@ export LIBRARY_PATH=/opt/homebrew/lib
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
@@ -39,3 +41,7 @@ parse_git_branch() {
 # \w = current working directory
 PS1="${GREEN}\u@\h ${BLUE}\w${YELLOW}\$(if git rev-parse --is-inside-work-tree &>/dev/null; then echo \" (\$(parse_git_branch))\"; fi)${RESET}\n$ "
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

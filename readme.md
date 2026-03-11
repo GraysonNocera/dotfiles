@@ -26,7 +26,9 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
 ## Random commands run
+
 ```
+### Mac
 brew install nvim
 
 dotnet tool install -g EasyDotnet
@@ -36,4 +38,27 @@ brew update
 
 brew tap homebrew/cask-fonts
 brew install --cask font-jetbrains-mono-nerd-font
+```
+
+### Linux
+```
+# install nvim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim-linux-x86_64
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
+# install nodejs and npm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+nvm install node
+nvm use node
+
+npm install tree-sitter-cli
+
+# install ripgrep
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep_14.1.1-1_amd64.deb
+sudo dpkg -i ripgrep_14.1.1-1_amd64.deb
+
+# install lazygit
+go install github.com/jesseduffield/lazygit@latest
 ```
