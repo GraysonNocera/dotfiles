@@ -26,3 +26,27 @@ map.set("n", "<leader>lx", "<cmd>LspStop<cr>", { desc = "LSP: Stop" })
 -- Markdown
 map.set("n", "<leader>m", "", { desc = "Markdown" })
 map.set("n", "<leader>mr", "<cmd>RenderMarkdown toggle<cr>", { desc = "Toggle Markdown Render" })
+
+-- Harpoon
+local harpoon = require("harpoon")
+harpoon:setup()
+
+map.set("n", "<leader>a", function()
+  harpoon:list():add()
+end)
+map.set("n", "<C-e>", function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end)
+
+map.set("n", "<C-g>", function()
+  harpoon:list():select(1)
+end)
+map.set("n", "<C-t>", function()
+  harpoon:list():select(2)
+end)
+map.set("n", "<C-n>", function()
+  harpoon:list():select(3)
+end)
+map.set("n", "<C-s>", function()
+  harpoon:list():select(4)
+end)
