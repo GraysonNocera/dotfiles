@@ -13,7 +13,9 @@ map.set("n", "gp", function()
   end)
 end, { desc = "Peek Definition" })
 
-map.del("n", "<leader>l") -- remove Lazy default
+-- Removing Lazy defaults
+map.del("n", "<leader>l")
+
 map.set("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins (Lazy)" })
 
 -- LSP Stuff
@@ -25,7 +27,6 @@ map.set("n", "<leader>lx", "<cmd>LspStop<cr>", { desc = "LSP: Stop" })
 
 -- Markdown
 map.set("n", "<leader>m", "", { desc = "Markdown" })
-map.set("n", "<leader>mr", "<cmd>RenderMarkdown toggle<cr>", { desc = "Toggle Markdown Render" })
 
 -- Harpoon
 local harpoon = require("harpoon")
@@ -50,3 +51,62 @@ end)
 map.set("n", "<C-s>", function()
   harpoon:list():select(4)
 end)
+
+-- Easy Dotnet
+local dotnet = require("easy-dotnet")
+
+map.set("n", "<leader>d", function() end, { desc = ".NET" })
+map.set("n", "<leader>dr", function()
+  dotnet.run()
+end, { desc = ".NET Run project" })
+
+map.set("n", "<leader>dd", function()
+  dotnet.debug()
+end, { desc = ".NET Debug project" })
+
+map.set("n", "<leader>db", function()
+  dotnet.build()
+end, { desc = ".NET Build project" })
+
+map.set("n", "<leader>dt", function()
+  dotnet.test()
+end, { desc = ".NET Run tests" })
+
+map.set("n", "<leader>dT", function()
+  dotnet.testrunner()
+end, { desc = ".NET Test runner UI" })
+
+map.set("n", "<leader>ds", function()
+  dotnet.restore()
+end, { desc = ".NET Restore" })
+
+map.set("n", "<leader>dv", function()
+  dotnet.project_view()
+end, { desc = ".NET Project view" })
+
+map.set("n", "<leader>dc", function()
+  dotnet.clean()
+end, { desc = ".NET Clean" })
+
+map.set("n", "<leader>de", function() end, { desc = ".NET EF Migrations" })
+
+map.set("n", "<leader>del", function()
+  dotnet.ef_migrations_list()
+end, { desc = ".NET EF Migrations List" })
+
+map.set("n", "<leader>dea", function()
+  vim.ui.input({ prompt = "Migration name: " }, function(name)
+    if not name or name == "" then
+      return
+    end
+    dotnet.ef_migrations_add(name)
+  end)
+end, { desc = ".NET EF Migrations Add" })
+
+map.set("n", "<leader>der", function()
+  dotnet.ef_migrations_remove()
+end, { desc = ".NET EF Migrations Remove" })
+
+map.set("n", "<leader>dw", function()
+  dotnet.watch()
+end, { desc = ".NET Run Watch" })

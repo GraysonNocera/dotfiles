@@ -34,6 +34,8 @@ vim.api.nvim_create_autocmd("FileType", {
       buffer = event.buf,
       desc = "Toggle markdown checkbox",
     })
+
+    vim.keymap.set("n", "<leader>mr", "<cmd>RenderMarkdown toggle<cr>", { desc = "Toggle Markdown Render" })
   end,
 })
 
