@@ -17,6 +17,26 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function(event)
+    vim.keymap.set({ "n", "v" }, "<leader>t", function()
+      local line = vim.api.nvim_get_current_line()
+
+      if line:match("%[ %]") then
+        line = line:gsub("%[ %]", "[x]")
+      elseif line:match("%[x%]") then
+        line = line:gsub("%[x%]", "[ ]")
+      end
+
+      vim.api.nvim_set_current_line(line)
+    end, {
+      buffer = event.buf,
+      desc = "Toggle markdown checkbox",
+    })
+  end,
+})
+
 -- vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
 --   pattern = { "*" },
 --   command = "silent! wall",
