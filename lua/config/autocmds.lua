@@ -44,3 +44,65 @@ vim.api.nvim_create_autocmd("FileType", {
 --   command = "silent! wall",
 --   nested = true,
 -- })
+
+local csharpier_running = false
+
+local function should_run()
+  -- Must have dotnet
+  if vim.fn.executable("dotnet") == 0 then
+    return false
+  end
+
+  -- Must be a C# project
+  if vim.fn.glob("*.csproj") == "" then
+    return false
+  end
+
+  -- Must have csharpier installed (global or local tool)
+  local handle = io.popen("dotnet tool list -g 2>/dev/null | grep csharpier")
+  if handle then
+    local result = handle:read("*a")
+    handle:close()
+    if result == nil or result == "" then
+      return false
+    end
+  else
+    return false
+  end
+
+  return true
+end
+
+local function run_csharpier()
+  if csharpier_running then
+    return
+  end
+
+  if not should_run() then
+    return
+  end
+
+  csharpier_running = true
+
+  vim.system({ "dotnet", "csharpier", "format", "." }, { cwd = vim.fn.getcwd() }, function(obj)
+    csharpier_running = false
+
+    vim.schedule(function()
+      if obj.code == 0 then
+        vim.notify("CSharpier formatting complete", vim.log.levels.INFO)
+
+        -- Reload changed files
+        vim.cmd("checktime")
+      else
+        vim.notify("CSharpier failed", vim.log.levels.WARN)
+      end
+    end)
+  end)
+end
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*lazygit",
+  callback = function()
+    run_csharpier()
+  end,
+})

@@ -1,6 +1,6 @@
 return {
   "zbirenbaum/copilot.lua",
-  requires = {
+  dependencies = {
     "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
   },
   cmd = "Copilot",
@@ -8,5 +8,6 @@ return {
   opts = {
     suggestion = { enabled = true },
     panel = { enabled = false },
+    -- copilot_model = "claude-sonnet-4.6",
   },
 }

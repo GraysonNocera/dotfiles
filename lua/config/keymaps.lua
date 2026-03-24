@@ -15,8 +15,8 @@ end, { desc = "Peek Definition" })
 
 -- Removing Lazy defaults
 map.del("n", "<leader>l")
-map.del("n", "<leader>ff")
-map.del("n", "<leader>fF")
+-- map.del("n", "<leader>ff")
+-- map.del("n", "<leader>fF")
 
 map.set("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins (Lazy)" })
 
@@ -28,17 +28,14 @@ map.set("n", "<leader>ls", "<cmd>LspStart<cr>", { desc = "LSP: Start" })
 map.set("n", "<leader>lx", "<cmd>LspStop<cr>", { desc = "LSP: Stop" })
 
 -- Telescope weirdness
--- Root search (what you want most of the time)
-map.set("n", "<leader>ff", function()
-  require("telescope.builtin").find_files()
-end, { desc = "Find Files (Root Dir)" })
-
--- Folder search
-map.set("n", "<leader>fF", function()
-  require("telescope.builtin").find_files({
-    cwd = require("lazyvim.util").root(),
-  })
-end, { desc = "Find Files (cwd)" })
+-- map.set("n", "<leader>ff", function()
+--   require("telescope.builtin").find_files()
+-- end, { desc = "Find Files (Root Dir)" })
+-- map.set("n", "<leader>fF", function()
+--   require("telescope.builtin").find_files({
+--     cwd = require("lazyvim.util").root(),
+--   })
+-- end, { desc = "Find Files (cwd)" })
 
 -- Markdown
 map.set("n", "<leader>m", "", { desc = "Markdown" })
@@ -54,7 +51,7 @@ map.set("n", "<C-e>", function()
   harpoon.ui:toggle_quick_menu(harpoon:list())
 end)
 
-map.set("n", "<C-h>", function()
+map.set("n", "<C-m>", function()
   harpoon:list():select(1)
 end)
 map.set("n", "<C-t>", function()
@@ -127,6 +124,6 @@ map.set("n", "<leader>dw", function()
 end, { desc = ".NET Run Watch" })
 
 -- Copilot
-map.set("n", "<leader>cc", function()
+map.set("n", "<leader>co", function()
   require("CopilotChat").toggle()
 end, { desc = "Toggle CopilotChat" })
