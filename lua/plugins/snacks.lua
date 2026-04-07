@@ -10,6 +10,9 @@ return {
       scope = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
+      explorer = {
+        focus = "center",
+      },
 
       -- disable the tab/buffer UI
       bufferline = { enabled = false },

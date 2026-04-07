@@ -7,7 +7,7 @@ return {
     build = "make tiktoken",
     opts = {
       -- See Configuration section for options
-      model = "claude-sonnet-4.6",
+      model = "claude-opus-4.6",
       window = {
         layout = "horizontal",
         height = 0.4,

@@ -1,11 +1,11 @@
 return {
   "saghen/blink.cmp",
+  version = "1.*",
   dependencies = {
     {
       "giuxtaposition/blink-cmp-copilot",
     },
   },
-  version = "*",
   opts = {
     keymap = {
       preset = "super-tab",

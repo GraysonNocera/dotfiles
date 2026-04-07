@@ -4,14 +4,8 @@
 
 local map = vim.keymap
 
-map.set("n", "gp", function()
-  local params = vim.lsp.util.make_position_params()
-  vim.lsp.buf_request(0, "textDocument/definition", params, function(_, result)
-    if result and result[1] then
-      vim.lsp.util.preview_location(result[1])
-    end
-  end)
-end, { desc = "Peek Definition" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 -- Removing Lazy defaults
 map.del("n", "<leader>l")

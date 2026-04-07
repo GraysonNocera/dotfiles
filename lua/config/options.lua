@@ -4,4 +4,6 @@
 
 local opt = vim.opt
 opt.smoothscroll = false
-opt.scrolloff = 9999
+opt.scrolloff = 5
+opt.lazyredraw = true
+opt.sidescrolloff = 5
