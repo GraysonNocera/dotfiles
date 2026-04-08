@@ -7,18 +7,18 @@ let mapleader = " "
 " =====================
 " Refactor / Code intel
 " =====================
-nnoremap gr :action RenameElement<CR>
-nnoremap ga :action ShowIntentionActions<CR>
-nnoremap gi :action GotoImplementation<CR>
-nnoremap ge :action ShowErrorDescription<CR>
+nnoremap <leader>cr :action RenameElement<CR>
+nnoremap <leader>ca :action ShowIntentionActions<CR>
+nnoremap <leader>gI :action GotoImplementation<CR>
+nnoremap <leader>ce :action ShowErrorDescription<CR>
 
 " Roll back current hunk (or line) under cursor
-nnoremap <leader>gu :action Vcs.RollbackChangedLines<CR>
+nnoremap <leader>ghu :action Vcs.RollbackChangedLines<CR>
 
 " =====================
 " GitHub Copilot
 " =====================
-nnoremap <leader>c :action ActivateGitHubCopilotChatToolWindow<CR>
+nnoremap <leader>co :action ActivateGitHubCopilotChatToolWindow<CR>
 nnoremap <leader>h :action copilot.chat.inline<CR>
 
 " =====================
@@ -30,8 +30,8 @@ nnoremap <leader>/ :action FindInPath<CR>
 " =====================
 " Git
 " =====================
-nnoremap ]c :action VcsShowNextChangeMarker<CR>
-nnoremap [c :action VcsShowPrevChangeMarker<CR>
+nnoremap ]h :action VcsShowNextChangeMarker<CR>
+nnoremap [h :action VcsShowPrevChangeMarker<CR>
 nnoremap gb :action Annotate<CR>
 
 " =====================
@@ -47,8 +47,9 @@ nnoremap = :w<CR>:!dotnet csharpier %<CR>:e!<CR>
 " Files
 " =====================
 nnoremap <leader>n :action NewFile<CR>
-nnoremap <leader>r :action RecentFiles<CR>
-nnoremap <leader>f :action GotoFile<CR>
+nnoremap <leader>fb :action RecentFiles<CR>
+nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>bb <C-^>
 
 nnoremap <leader>tr :action GotoTest<CR>:action RiderUnitTestRunContextAction<CR>
 
