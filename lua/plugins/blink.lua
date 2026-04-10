@@ -1,11 +1,7 @@
 return {
   "saghen/blink.cmp",
   version = "1.*",
-  dependencies = {
-    {
-      "giuxtaposition/blink-cmp-copilot",
-    },
-  },
+  dependencies = {},
   opts = {
     keymap = {
       preset = "super-tab",
@@ -16,13 +12,6 @@ return {
       },
       ["<Tab>"] = {
         function(cmp)
-          if vim.b[vim.api.nvim_get_current_buf()].nes_state then
-            cmp.hide()
-            return (
-              require("copilot-lsp.nes").apply_pending_nes()
-              and require("copilot-lsp.nes").walk_cursor_end_edit()
-            )
-          end
           if cmp.snippet_active() then
             return cmp.accept()
           else
@@ -35,7 +24,7 @@ return {
     },
     fuzzy = { implementation = "prefer_rust_with_warning" },
     sources = {
-      default = { "lsp", "easy-dotnet", "path", "copilot" },
+      default = { "lsp", "easy-dotnet", "path" },
       providers = {
         ["easy-dotnet"] = {
           name = "easy-dotnet",
@@ -44,12 +33,12 @@ return {
           score_offset = 10000,
           async = true,
         },
-        copilot = {
-          name = "copilot",
-          module = "blink-copilot",
-          score_offset = 100,
-          async = true,
-        },
+        --   copilot = {
+        --     name = "copilot",
+        --     module = "blink-copilot",
+        --     score_offset = 100,
+        --     async = true,
+        --   },
       },
     },
   },
