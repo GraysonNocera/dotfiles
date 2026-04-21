@@ -24,10 +24,11 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "*.cs",
-  command = "silent !dotnet csharpier format %",
-})
+-- -- Currently takes too long
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--   pattern = "*.cs",
+--   command = "silent !dotnet csharpier format %",
+-- })
 
 -- local csharpier_running = false
 -- local function should_run()
