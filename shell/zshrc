@@ -13,6 +13,13 @@ export LIBRARY_PATH=/opt/homebrew/lib
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+# android
+export ANDROID_HOME=$HOME/Library/Android/sdk/
+export CMDLINE_TOOLS=$ANDROID_HOME/cmdline-tools/latest/bin/
+export PLATFORM_TOOLS=$ANDROID_HOME/platform-tools/
+export PATH=$PATH:$CMDLINE_TOOLS
+export PATH=$PATH:$PLATFORM_TOOLS
+
 if [[ "$(uname)" == "Darwin" ]]; then
   export SECURITYSESSIONID=$(security login-keychain | tr -d '"')
 fi
