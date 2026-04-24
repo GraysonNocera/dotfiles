@@ -56,3 +56,4 @@ RESET="%{%f%}"
 PROMPT="${GREEN}%n@%m ${BLUE}%~${YELLOW}\$(if git rev-parse --is-inside-work-tree &>/dev/null; then echo \" (\$(parse_git_branch))\"; fi)${RESET}
 $ "
 
+export PATH="$HOME/.local/bin:$PATH"
