@@ -3,9 +3,14 @@
 -- Add any additional keymaps here
 
 local map = vim.keymap
+local fn = vim.fn
 
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+map.set("n", "<leader>o", function()
+  fn.jobstart({ "open", vim.fn.expand("%:h") }, { detach = true })
+end, { desc = "Open dir in Finder" })
+
+map.set("n", "<C-d>", "<C-d>zz")
+map.set("n", "<C-u>", "<C-u>zz")
 
 -- Removing Lazy defaults
 map.del("n", "<leader>l")
