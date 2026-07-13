@@ -21,10 +21,18 @@ map.set("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins (Lazy)" })
 
 -- LSP Stuff
 map.set("n", "<leader>l", "", { desc = "LSP" })
-map.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP: Info" })
-map.set("n", "<leader>lr", "<cmd>LspRestart<cr>", { desc = "LSP: Restart" })
-map.set("n", "<leader>ls", "<cmd>LspStart<cr>", { desc = "LSP: Start" })
-map.set("n", "<leader>lx", "<cmd>LspStop<cr>", { desc = "LSP: Stop" })
+map.set("n", "<leader>li", "<cmd>checkhealth vim.lsp<cr>", { desc = "LSP: Info" })
+map.set("n", "<leader>lr", "<cmd>lsp restart<cr>", { desc = "LSP: Restart" })
+map.set("n", "<leader>ls", "<cmd>lsp enable<cr>", { desc = "LSP: Start" })
+map.set("n", "<leader>lx", "<cmd>lsp disable<cr>", { desc = "LSP: Stop" })
+
+map.set("n", "<leader>nn", function()
+  require("telescope").extensions.notify.notify()
+end, { desc = "Show Notifications" })
+
+map.set("n", "<leader>nc", function()
+  require("notify").clear_history()
+end, { desc = "Clear Notification History " })
 
 -- Telescope weirdness
 -- map.set("n", "<leader>ff", function()

@@ -1,3 +1,4 @@
+local tailwindcss = require("lspconfig.configs.tailwindcss")
 return {
   {
     "neovim/nvim-lspconfig",
@@ -29,6 +30,23 @@ return {
                 enable = true,
               },
               validate = { enable = true },
+            },
+          },
+        },
+        elixirls = {
+          settings = {
+            cmd = { "elixir-ls" }, -- Adjust path if not in your $PATH
+            filetypes = { "elixir", "eelixir", "html-eex", "heex" },
+            -- root_dir = require("lspconfig.util").root_dir("mix.exs", ".git"),
+          },
+        },
+        tailwindcss = {
+          settings = {
+            filetypes = { "heex", "elixir", "html-eex" },
+            init_options = {
+              userLanguages = {
+                heex = "html", -- Treat heex as html for tailwind
+              },
             },
           },
         },
