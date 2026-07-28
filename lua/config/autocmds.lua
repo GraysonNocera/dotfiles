@@ -14,6 +14,30 @@ if vim.lsp.document_color then
   vim.lsp.document_color.enable(false)
 end
 
+-- Quitting with a C# solution loaded is slow (~10s). Profiling showed the time
+-- is NOT the Roslyn process (killing it doesn't help) — it's Neovim's own
+-- teardown of many windows/buffers, plus `vim.lsp` client:stop() calling
+-- `_watchfiles.cancel()` to unwind Roslyn's huge workspace file-watchers.
+-- No autocmd can get ahead of the window teardown, so instead we persist
+-- everything we care about and hard-exit the process, skipping teardown.
+--
+-- NOTE: we SIGKILL child pids directly rather than via client:stop(true),
+-- because that LSP path (_watchfiles.cancel) is itself the ~10s stall.
+vim.api.nvim_create_user_command("FastQuit", function()
+  local uv = vim.uv or vim.loop
+  pcall(function() vim.cmd("silent! wall") end) -- write all modified files
+  pcall(function() require("persistence").save() end) -- keep the session
+  pcall(function() vim.cmd("silent! wshada") end) -- keep marks/registers/history
+  -- Kill child processes (Roslyn, dotnet server) so they don't orphan.
+  for _, pid in ipairs(vim.api.nvim_get_proc_children(vim.fn.getpid())) do
+    pcall(uv.kill, pid, "sigkill")
+  end
+  uv.kill(vim.fn.getpid(), "sigkill") -- hard-exit, skipping the slow teardown
+end, { desc = "Write everything, then hard-kill Neovim (instant quit)" })
+
+-- Make the usual :wqa use the fast path (writes all + quits, same intent).
+vim.cmd([[cnoreabbrev <expr> wqa (getcmdtype() == ':' && getcmdline() ==# 'wqa') ? 'FastQuit' : 'wqa']])
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "json", "jsonc" },
   callback = function()
