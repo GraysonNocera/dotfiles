@@ -12,6 +12,20 @@
 vim.lsp.document_color.enable(false)
 
 vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "json", "jsonc" },
+  callback = function()
+    vim.bo.equalprg = "jq ."
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "yaml",
+  callback = function()
+    vim.bo.equalprg = "yamlfmt -in"
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "cs",
   callback = function()
     vim.bo.expandtab = true

@@ -3,6 +3,9 @@ return {
   opts = {
     formatters_by_ft = {
       cs = { "csharpier" },
+      yaml = { "yamlfmt" },
+      json = { "jq" },
+      jsonc = { "jq" },
     },
   },
 }
