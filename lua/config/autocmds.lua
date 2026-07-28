@@ -7,6 +7,10 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 --
+-- Workaround for nvim 0.12.3 bug: document_color.lua:225 assert fails when LSP
+-- client dies but the provider still holds its ID. Disable until upstream fix.
+vim.lsp.document_color.enable(false)
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "cs",
   callback = function()
