@@ -17,7 +17,11 @@ map.del("n", "<leader>l")
 -- map.del("n", "<leader>ff")
 -- map.del("n", "<leader>fF")
 
-map.set("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins (Lazy)" })
+map.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy (plugins)" })
+
+-- Paste over a visual selection without clobbering the register with the
+-- text that was replaced (delete to the black-hole register, then paste).
+map.set("x", "<leader>p", '"_dP', { desc = "Paste (keep register)" })
 
 -- Format on demand (csharpier for C#, conform formatters otherwise)
 map.set({ "n", "v" }, "<leader>fl", function()
