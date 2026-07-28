@@ -9,7 +9,10 @@
 --
 -- Workaround for nvim 0.12.3 bug: document_color.lua:225 assert fails when LSP
 -- client dies but the provider still holds its ID. Disable until upstream fix.
-vim.lsp.document_color.enable(false)
+-- Guarded because the document_color API doesn't exist on all nvim versions.
+if vim.lsp.document_color then
+  vim.lsp.document_color.enable(false)
+end
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "json", "jsonc" },
@@ -32,6 +35,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.tabstop = 4
     vim.bo.shiftwidth = 4
     vim.bo.softtabstop = 4
+    -- Make `=` (e.g. gg=G) reindent/format C# through csharpier's stdin mode.
+    vim.bo.equalprg = "dotnet csharpier format --stdin-path " .. vim.fn.shellescape(vim.fn.expand("%:p"))
+    -- Don't format C# on save; use <leader>fl to run csharpier on demand.
+    vim.b.autoformat = false
   end,
 })
 

@@ -19,6 +19,11 @@ map.del("n", "<leader>l")
 
 map.set("n", "<leader>p", "<cmd>Lazy<cr>", { desc = "Plugins (Lazy)" })
 
+-- Format on demand (csharpier for C#, conform formatters otherwise)
+map.set({ "n", "v" }, "<leader>fl", function()
+  require("conform").format({ async = true, lsp_format = "never" })
+end, { desc = "Format buffer" })
+
 -- LSP Stuff
 map.set("n", "<leader>l", "", { desc = "LSP" })
 map.set("n", "<leader>li", "<cmd>checkhealth vim.lsp<cr>", { desc = "LSP: Info" })
