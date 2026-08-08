@@ -7,7 +7,7 @@ return {
     { "rcarriga/nvim-notify" },
   },
   keys = {
-    { "<leader>fh", "<cmd>Telescope find_files hidden=true<cr>", desc = "Find Hidden Files" },
+    { "<leader>fh", "<cmd>Telescope find_files hidden=true no_ignore=true<cr>", desc = "Find Files (hidden + ignored)" },
   },
   config = function(_, opts)
     local telescope = require("telescope")

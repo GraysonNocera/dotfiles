@@ -12,8 +12,9 @@ end, { desc = "Open dir in Finder" })
 map.set("n", "<C-d>", "<C-d>zz")
 map.set("n", "<C-u>", "<C-u>zz")
 
--- Removing Lazy defaults
-map.del("n", "<leader>l")
+-- Removing Lazy defaults. Guarded: LazyVim no longer maps <leader>l by
+-- default, and an unguarded del() throws E31 and aborts the rest of this file.
+pcall(map.del, "n", "<leader>l")
 -- map.del("n", "<leader>ff")
 -- map.del("n", "<leader>fF")
 
@@ -27,6 +28,48 @@ map.set("x", "<leader>p", '"_dP', { desc = "Paste (keep register)" })
 map.set({ "n", "v" }, "<leader>fl", function()
   require("conform").format({ async = true, lsp_format = "never" })
 end, { desc = "Format buffer" })
+
+-- Grep the visual selection across the project (not a file finder).
+map.set("x", "<leader>l", function()
+  -- Yank the selection into a scratch register, restoring the old value.
+  local save = vim.fn.getreg("v")
+  local save_type = vim.fn.getregtype("v")
+  vim.cmd('noautocmd normal! "vy')
+  local text = vim.fn.getreg("v")
+  vim.fn.setreg("v", save, save_type)
+  text = text:gsub("\n", "")
+  require("telescope.builtin").grep_string({ search = text })
+end, { desc = "Grep selection (project)" })
+
+-- Live-grep inside a folder you choose instead of the whole project. Prompts
+-- with Tab-completion for directories, defaulting to the current file's dir so
+-- it's one <cr> to search "this folder". Empty input cancels.
+map.set("n", "<leader>sf", function()
+  vim.ui.input({
+    prompt = "Grep in folder: ",
+    default = fn.expand("%:h") .. "/",
+    completion = "dir",
+  }, function(dir)
+    if not dir or dir == "" then
+      return
+    end
+    require("telescope.builtin").live_grep({
+      cwd = dir,
+      prompt_title = "Grep: " .. fn.fnamemodify(dir, ":~:."),
+    })
+  end)
+end, { desc = "Search in folder (live grep)" })
+
+-- Git blame. <leader>gb now opens the whole-file blame in a scrollbound
+-- gutter (Rider-style: author/date beside every line, via gitsigns). The old
+-- per-line commit-log picker moves to <leader>gc. Both override the LazyVim
+-- defaults (gb was Snacks git_log_line).
+map.set("n", "<leader>gb", function()
+  require("gitsigns").blame()
+end, { desc = "Git Blame (file)" })
+map.set("n", "<leader>gc", function()
+  Snacks.picker.git_log_line()
+end, { desc = "Git Blame Line (commits)" })
 
 -- LSP Stuff
 map.set("n", "<leader>l", "", { desc = "LSP" })

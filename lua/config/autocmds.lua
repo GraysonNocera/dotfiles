@@ -28,6 +28,19 @@ vim.api.nvim_create_user_command("FastQuit", function()
   pcall(function() vim.cmd("silent! wall") end) -- write all modified files
   pcall(function() require("persistence").save() end) -- keep the session
   pcall(function() vim.cmd("silent! wshada") end) -- keep marks/registers/history
+  -- Delete swap files ourselves: SIGKILL skips nvim's normal exit cleanup,
+  -- which is what usually unlinks them. Buffers are already written (wall
+  -- above), so removing the swap is exactly what a clean exit would do —
+  -- without this, every FastQuit orphans a .swp and re-open warns "swap
+  -- file already exists".
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      local ok, swap = pcall(vim.fn.swapname, buf)
+      if ok and swap ~= "" then
+        pcall(uv.fs_unlink, swap)
+      end
+    end
+  end
   -- Kill child processes (Roslyn, dotnet server) so they don't orphan.
   for _, pid in ipairs(vim.api.nvim_get_proc_children(vim.fn.getpid())) do
     pcall(uv.kill, pid, "sigkill")
@@ -48,7 +61,9 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "yaml",
   callback = function()
-    vim.bo.equalprg = "yamlfmt -in"
+    -- retain_line_breaks keeps the blank lines I use to separate jobs;
+    -- without it yamlfmt collapses them.
+    vim.bo.equalprg = "yamlfmt -formatter retain_line_breaks=true -in"
   end,
 })
 

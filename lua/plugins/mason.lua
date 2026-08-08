@@ -7,6 +7,9 @@ return {
     },
     ensure_installed = {
       "yamlfmt",
+      "gopls",
+      "gofumpt",
+      "goimports",
     },
   },
 }
