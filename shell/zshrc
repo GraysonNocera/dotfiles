@@ -33,6 +33,21 @@ fi
 
 autoload -Uz compinit && compinit
 
+# Force the terminal back onto the main screen before every prompt. If a
+# program (fzf widget, pager, crashed TUI) exits without leaving the alternate
+# screen, the shell gets stuck in the alt buffer -- which has NO scrollback, so
+# command output can't be scrolled back to. This guarantees we're always on the
+# scrollback-backed main screen whenever a prompt is drawn.
+autoload -Uz add-zsh-hook
+_leave_alt_screen() {
+  # Only act when tmux reports THIS pane is actually stuck in the alt buffer.
+  # Emitting the escape unconditionally would trigger a cursor/screen restore
+  # on every prompt and wipe normal output, so guard on #{alternate_on}.
+  [[ -n "$TMUX" ]] || return
+  [[ "$(tmux display -p '#{alternate_on}' 2>/dev/null)" == 1 ]] && printf '\033[?1049l'
+}
+add-zsh-hook precmd _leave_alt_screen
+
 setopt PROMPT_SUBST
 
 # Function to get current git branch
