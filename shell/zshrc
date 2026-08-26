@@ -1,6 +1,5 @@
 echo "hello from your .zshrc :)"
 
-# Default editor (used by git, Claude Code's transcript `v`, etc.)
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
