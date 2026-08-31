@@ -134,5 +134,6 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 alias c='clear'
+alias d='dotnet'
 
 export PATH="$HOME/.local/bin:$PATH"
