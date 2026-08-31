@@ -6,3 +6,6 @@ local opt = vim.opt
 opt.smoothscroll = false
 opt.scrolloff = 5
 opt.sidescrolloff = 5
+
+-- Enable 24-bit truecolor (needed for correct colors inside tmux).
+opt.termguicolors = true
