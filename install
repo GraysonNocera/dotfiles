@@ -1,14 +1,27 @@
 #!/usr/bin/env bash
 set -e
 
-DOTFILES="$HOME/dotfiles"
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Map each dotfile (relative to this repo) to its destination.
+# Flat repo layout -> real target paths under $HOME.
+LINKS=(
+  "zshrc:$HOME/.zshrc"
+  "bashrc:$HOME/.bashrc"
+  "tmux.conf:$HOME/.tmux.conf"
+  "ideavimrc:$HOME/.ideavimrc"
+  "ssh_rc:$HOME/.ssh/rc"
+)
 
 link() {
   local src="$1"
   local dest="$2"
 
+  # Make sure the destination's parent directory exists (e.g. ~/.ssh).
+  mkdir -p "$(dirname "$dest")"
+
   if [ -e "$dest" ] && [ ! -L "$dest" ]; then
-    echo "Backing up existing file: $dest to $dest.bak"
+    echo "Backing up existing file: $dest -> $dest.bak"
     mv "$dest" "$dest.bak"
   fi
 
@@ -16,13 +29,17 @@ link() {
   ln -sf "$src" "$dest"
 }
 
-link "$DOTFILES/shell/zshrc" "$HOME/.zshrc"
-link "$DOTFILES/shell/bashrc" "$HOME/.bashrc"
-link "$DOTFILES/shell/tmux.conf" "$HOME/.tmux.conf"
-link "$DOTFILES/editor/ideavimrc" "$HOME/.ideavimrc"
-link "$DOTFILES/shell/ssh/rc" "$HOME/.ssh/rc"
+for entry in "${LINKS[@]}"; do
+  src="${entry%%:*}"
+  dest="${entry#*:}"
+  link "$DOTFILES/$src" "$dest"
+done
+
+# Install tmux plugin manager (tpm) if it isn't already present.
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPM_DIR" ]; then
+  echo "Installing tmux plugin manager (tpm)..."
+  git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+fi
 
 echo "Symlinked dotfiles successfully."
-
-# link "$DOTFILES/git/gitconfig"   "$HOME/.gitconfig"
-# link "$DOTFILES/vim/vimrc"       "$HOME/.vimrc"
