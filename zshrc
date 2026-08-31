@@ -33,6 +33,20 @@ fi
 
 autoload -Uz compinit && compinit
 
+# Completion tweaks: case-insensitive matching, an arrow-key menu, and
+# colorized matches.
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ''
+
+# Arrow keys search history by the prefix already typed (e.g. type "git "
+# then press Up to cycle only past commands starting with "git ").
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+
 # Force the terminal back onto the main screen before every prompt. If a
 # program (fzf widget, pager, crashed TUI) exits without leaving the alternate
 # screen, the shell gets stuck in the alt buffer -- which has NO scrollback, so
@@ -50,28 +64,73 @@ add-zsh-hook precmd _leave_alt_screen
 
 setopt PROMPT_SUBST
 
-# Function to get current git branch
-parse_git_branch() {
-  git rev-parse --abbrev-ref HEAD 2>/dev/null
+# Git segment for the prompt: prints " <glyph> <branch>" inside a repo, nothing
+# otherwise. `glyph` holds the Nerd Font branch symbol (U+E0A0). To use a
+# different icon, paste another Nerd Font glyph between the quotes (e.g. the
+# code-branch U+F126 or git-branch U+E725) -- a literal glyph is more portable
+# here than a \u escape, which errors under a non-UTF-8 locale.
+git_prompt() {
+  local branch
+  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return
+  local glyph=''
+  echo " ${glyph} ${branch}"
 }
 
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
-# Colors
-ED="%{%F{red}%}"
-GREEN="%{%F{green}%}"
-BLUE="%{%F{blue}%}"
-YELLOW="%{%F{yellow}%}"
-RESET="%{%f%}"
+# History behavior.
+setopt SHARE_HISTORY        # instant history sharing across open terminals
+setopt HIST_IGNORE_ALL_DUPS # drop older duplicates of a repeated command
+setopt HIST_IGNORE_SPACE    # don't record commands that start with a space
+setopt HIST_REDUCE_BLANKS   # tidy up superfluous whitespace
+setopt EXTENDED_HISTORY     # record command start time
 
-# Prompt:
-# %n = username
-# %m = host (short)
-# %~ = current working directory (relative to home)
-# $(parse_git_branch) = current git branch (if available)
-PROMPT="${GREEN}%n@%m ${BLUE}%~${YELLOW}\$(if git rev-parse --is-inside-work-tree &>/dev/null; then echo \" (\$(parse_git_branch))\"; fi)${RESET}
-$ "
+# Directory navigation.
+setopt AUTO_CD              # `dotfiles` on its own means `cd dotfiles`
+setopt AUTO_PUSHD          # every cd pushes onto the directory stack
+setopt PUSHD_IGNORE_DUPS   # keep the stack free of duplicates
+
+# Vi editing mode indicator. zsh uses the vi keymap because $VISUAL/$EDITOR
+# contains "vi" (nvim), so the command line has NORMAL/INSERT modes. Show which.
+export KEYTIMEOUT=1   # 10ms: switch to NORMAL mode almost instantly after ESC
+
+vi_mode_prompt() {
+  case $KEYMAP in
+    vicmd) echo '%K{yellow}%F{black} CMD %f%k';;  # NORMAL (command) mode
+    *)     echo '%K{green}%F{black} INS %f%k';;   # INSERT mode
+  esac
+}
+# Redraw the prompt whenever the keymap changes or a new line starts, so the
+# indicator stays current.
+zle-keymap-select() { zle reset-prompt }
+zle-line-init()     { zle reset-prompt }
+zle -N zle-keymap-select
+zle -N zle-line-init
+
+# Prompt: two lines.
+#   line 1: cwd (cyan) + git branch (yellow) + vi-mode tag, keeping line 2 clear
+#   line 2: just an arrow, green after success / red after a failed command
+# %~            = cwd relative to home
+# $(git_prompt) = " <glyph> <branch>" when in a repo (see git_prompt above)
+# $(vi_mode_prompt) = INS / CMD pill reflecting the current vi keymap
+# %(?.A.B)      = A if last exit status was 0, else B
+PROMPT='%F{cyan}%~%f%F{yellow}$(git_prompt)%f $(vi_mode_prompt)
+%(?.%F{green}.%F{red})❯%f '
+
+# eza: a modern ls replacement. Falls back to plain ls if eza isn't installed.
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --group-directories-first'
+  alias ll='eza -l --git --icons --group-directories-first'
+  alias tree='eza --tree'
+fi
+
+# zoxide: a smarter cd that learns your most-used directories.
+# `cd <partial>` jumps to the best match; `cd` with no args still goes home.
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd='z'
+fi
 
 export PATH="$HOME/.local/bin:$PATH"

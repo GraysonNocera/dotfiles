@@ -40,6 +40,8 @@ Handy install commands for a fresh machine.
 
 ```bash
 brew install nvim
+brew install zoxide   # smarter cd (zshrc aliases `cd` to it)
+brew install eza      # modern ls (zshrc aliases ls/ll/tree to it)
 dotnet tool install -g EasyDotnet
 brew tap omnisharp/omnisharp-roslyn
 brew update
@@ -67,4 +69,10 @@ sudo dpkg -i ripgrep_14.1.1-1_amd64.deb
 
 # lazygit
 go install github.com/jesseduffield/lazygit@latest
+
+# zoxide (smarter cd; zshrc aliases `cd` to it)
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
+# eza (modern ls; zshrc aliases ls/ll/tree to it)
+cargo install eza   # or: apt install eza  (on recent Debian/Ubuntu)
 ```
