@@ -3,6 +3,9 @@ return {
   opts = {
     formatters_by_ft = {
       cs = { "csharpier" },
+      elixir = { "mix_format" },
+      heex = { "mix_format" },
+      eelixir = { "mix_format" },
       go = { "goimports", "gofumpt" },
       -- yamlfmt disabled on save: with retain_line_breaks=true it injects a
       -- #magic___^_^___line sentinel that corrupts literal block scalars
