@@ -12,6 +12,12 @@ end, { desc = "Open dir in Finder" })
 map.set("n", "<C-d>", "<C-d>zz")
 map.set("n", "<C-u>", "<C-u>zz")
 
+-- Reload every buffer whose file changed on disk (e.g. after an AI made edits
+-- across many files). `:checktime` + autoread refreshes the unmodified ones so
+-- the LSP stops diagnosing stale content; buffers with unsaved local changes
+-- are left alone and reported instead of being clobbered.
+map.set("n", "<leader>br", "<cmd>checktime<cr>", { desc = "Reload changed buffers" })
+
 -- Removing Lazy defaults. Guarded: LazyVim no longer maps <leader>l by
 -- default, and an unguarded del() throws E31 and aborts the rest of this file.
 pcall(map.del, "n", "<leader>l")
@@ -41,24 +47,48 @@ map.set("x", "<leader>l", function()
   require("telescope.builtin").grep_string({ search = text })
 end, { desc = "Grep selection (project)" })
 
--- Live-grep inside a folder you choose instead of the whole project. Prompts
--- with Tab-completion for directories, defaulting to the current file's dir so
--- it's one <cr> to search "this folder". Empty input cancels.
-map.set("n", "<leader>sf", function()
+-- Scoped find / grep / explore for this multi-root repo.
+--
+-- The base keys (<leader>ff find, <leader>e explorer, ...) are pinned to the
+-- repo top via vim.g.root_spec = { "cwd" } in options.lua, so they no longer
+-- drift with the current buffer's project root. When you want to work inside
+-- one subtree (.github/workflows, SSHManWeb, infrastructure/, ...) use the maps
+-- below: each prompts for a folder (Tab-completes directories, defaults to the
+-- current file's dir so it's one <cr> to pick "this folder") and scopes a
+-- Snacks picker there. Empty input cancels.
+local function in_folder(prompt, run)
   vim.ui.input({
-    prompt = "Grep in folder: ",
+    prompt = prompt,
     default = fn.expand("%:h") .. "/",
     completion = "dir",
   }, function(dir)
     if not dir or dir == "" then
       return
     end
-    require("telescope.builtin").live_grep({
-      cwd = dir,
-      prompt_title = "Grep: " .. fn.fnamemodify(dir, ":~:."),
-    })
+    run(fn.fnamemodify(dir, ":p"))
+  end)
+end
+
+-- Find files inside a folder you choose.
+map.set("n", "<leader>fd", function()
+  in_folder("Find files in folder: ", function(dir)
+    Snacks.picker.files({ cwd = dir, title = "Files: " .. fn.fnamemodify(dir, ":~:.") })
+  end)
+end, { desc = "Find Files (in folder…)" })
+
+-- Live-grep inside a folder you choose.
+map.set("n", "<leader>sf", function()
+  in_folder("Grep in folder: ", function(dir)
+    Snacks.picker.grep({ cwd = dir, title = "Grep: " .. fn.fnamemodify(dir, ":~:.") })
   end)
 end, { desc = "Search in folder (live grep)" })
+
+-- Open the file explorer rooted at a folder you choose.
+map.set("n", "<leader>ed", function()
+  in_folder("Explore folder: ", function(dir)
+    Snacks.explorer({ cwd = dir })
+  end)
+end, { desc = "Explorer (in folder…)" })
 
 -- Git blame. <leader>gb now opens the whole-file blame in a scrollbound
 -- gutter (Rider-style: author/date beside every line, via gitsigns). The old
