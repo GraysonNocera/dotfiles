@@ -5,6 +5,10 @@ export EDITOR="$VISUAL"
 
 # dotnet macOS dumbness
 export DYLD_FRAMEWORK_PATH=/System/Library/Frameworks
+# dotnet moved to homebrew; apphosts (global tools like csharp-ls, EasyDotnet)
+# need this to find the runtime since /etc/dotnet still points at the old
+# /usr/local/share/dotnet install location
+export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
 
 export PATH=$PATH:/opt/homebrew
 export PATH=$PATH:$HOME/Library/Python/3.9/bin
