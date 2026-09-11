@@ -17,3 +17,8 @@ opt.termguicolors = true
 -- current file belongs to. Forcing { "cwd" } keeps those keys anchored at the
 -- repo top; use the scoped maps in keymaps.lua to dip into a subtree.
 vim.g.root_spec = { "cwd" }
+
+-- Treat Hugo layouts as Go templates rather than plain HTML. Loaded from here
+-- because `config.options` runs before any buffer is read, so the filetype
+-- pattern and its FileType autocmd are in place for the first file opened.
+require("config.gohtmltmpl")

@@ -82,6 +82,12 @@ return {
           },
         },
         gh_actions_ls = {},
+        -- Hugo layouts are `gohtmltmpl` (see config/gohtmltmpl.lua), not `html`.
+        -- vscode-html-language-server still understands them, so keep tag and
+        -- attribute completion working in shortcodes and partials.
+        html = {
+          filetypes = { "html", "gohtmltmpl" },
+        },
         helm_ls = {
           settings = {
             ["helm-ls"] = {
