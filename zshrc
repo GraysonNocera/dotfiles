@@ -137,7 +137,19 @@ if command -v zoxide >/dev/null 2>&1; then
   alias cd='z'
 fi
 
+
+if command -v dotnet >/dev/null 2>&1; then
+  alias d='dotnet'
+fi
+
+if command -v lazygit >/dev/null 2>&1; then
+  alias lg='lazygit'
+fi
+
+if command -v hunk >/dev/null 2>&1; then
+  alias h='hunk'
+fi
+
 alias c='clear'
-alias d='dotnet'
 
 export PATH="$HOME/.local/bin:$PATH"
