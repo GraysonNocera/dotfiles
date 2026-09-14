@@ -181,9 +181,11 @@ map.set("n", "<leader>ds", function()
   dotnet.restore()
 end, { desc = ".NET Restore" })
 
+-- easy-dotnet has no project/solution explorer; `:Dotnet` with no args opens
+-- a picker over every command it does provide.
 map.set("n", "<leader>dv", function()
-  dotnet.project_view()
-end, { desc = ".NET Project view" })
+  vim.cmd("Dotnet")
+end, { desc = ".NET Command picker" })
 
 map.set("n", "<leader>dc", function()
   dotnet.clean()

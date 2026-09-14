@@ -119,3 +119,47 @@ vim.api.nvim_create_autocmd("FileType", {
 --     run_csharpier()
 --   end,
 -- })
+
+-- Auto-reload buffers that changed on disk (e.g. an AI agent editing many files
+-- at once). LazyVim only runs `checktime` on FocusGained/TermClose/TermLeave,
+-- and FocusGained rarely reaches nvim through tmux, so also check when idle
+-- (CursorHold fires after `updatetime`, 200ms) and on buffer switch. Roslyn
+-- trusts the buffer text it was sent, so a stale buffer means stale analysis;
+-- the reload resends the document. Buffers with unsaved local edits are left
+-- alone and reported, exactly as `:e` would. Manual fallback: <leader>br.
+vim.api.nvim_create_autocmd(
+  { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermClose", "TermLeave" },
+  {
+    group = vim.api.nvim_create_augroup("checktime_agent_edits", { clear = true }),
+    callback = function()
+      if vim.fn.mode() ~= "c" and vim.o.buftype == "" then
+        -- Neovim defers timestamp checks while an autocmd is running, so run
+        -- it on the next loop tick instead of relying on the deferred retry.
+        vim.schedule(function()
+          vim.cmd("checktime")
+        end)
+      end
+    end,
+  }
+)
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = vim.api.nvim_create_augroup("checktime_agent_edits_notify", { clear = true }),
+  callback = function(args)
+    vim.notify("Reloaded " .. vim.fn.fnamemodify(args.file, ":~:."), vim.log.levels.INFO)
+  end,
+})
+
+-- Roslyn: wipe source-generated buffers as soon as they are hidden. While one
+-- is open, Roslyn "freezes" that generated document in its workspace, and its
+-- rename handler asserts that only Razor documents are ever frozen
+-- (ProtocolConversions.cs: "Unexpected false"), so every rename in the
+-- solution fails until the buffer is closed. roslyn.nvim opens these via
+-- BufReadCmd (`gd` into generated code), so BufEnter is the safe hook here.
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("roslyn_source_generated_wipe", { clear = true }),
+  pattern = "roslyn-source-generated://*",
+  callback = function(args)
+    vim.bo[args.buf].bufhidden = "wipe"
+  end,
+})
