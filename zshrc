@@ -141,3 +141,10 @@ alias c='clear'
 alias d='dotnet'
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# vim for shell-commands
+bindkey -v
+export KEYTIMEOUT=1          # kill the Esc lag (default is 0.4s)
+bindkey '^?' backward-delete-char   # make backspace behave
+bindkey -M viins '^r' history-incremental-search-backward  # keep Ctrl-R
+
