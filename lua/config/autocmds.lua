@@ -153,3 +153,42 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.bo[args.buf].bufhidden = "wipe"
   end,
 })
+
+-- Gitsigns blame panel (<leader>gb): `y` yanks the full commit hash of the
+-- line under the cursor. The panel only prints an abbreviated hash, and only
+-- on the first line of each commit's block. The panel is scrollbound to the
+-- source window, so its line numbers match the file's; ask `git blame` for
+-- that one line rather than parsing the panel text.
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("gitsigns_blame_yank_sha", { clear = true }),
+  pattern = "gitsigns-blame",
+  callback = function(args)
+    vim.keymap.set("n", "y", function()
+      local lnum = vim.api.nvim_win_get_cursor(0)[1]
+      local file
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if buf ~= args.buf and vim.wo[win].scrollbind and vim.bo[buf].buftype == "" then
+          file = vim.api.nvim_buf_get_name(buf)
+          break
+        end
+      end
+      if not file or file == "" then
+        return vim.notify("Blame: source window not found", vim.log.levels.WARN)
+      end
+      local out = vim
+        .system({ "git", "blame", "-l", "-s", "-L", lnum .. "," .. lnum, "--", file }, { cwd = vim.fs.dirname(file) })
+        :wait()
+      local sha = out.code == 0 and out.stdout:match("^%^?(%x+)")
+      if not sha then
+        return vim.notify("Blame: " .. vim.trim(out.stderr or ""), vim.log.levels.WARN)
+      end
+      if sha:match("^0+$") then
+        return vim.notify("Blame: line is not committed yet", vim.log.levels.INFO)
+      end
+      vim.fn.setreg("+", sha)
+      vim.fn.setreg('"', sha)
+      vim.notify("Yanked " .. sha)
+    end, { buffer = args.buf, nowait = true, desc = "Yank commit hash" })
+  end,
+})
