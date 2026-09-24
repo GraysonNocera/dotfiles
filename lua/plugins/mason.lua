@@ -10,6 +10,7 @@ return {
       "gopls",
       "gofumpt",
       "goimports",
+      "roslyn",
     },
   },
 }

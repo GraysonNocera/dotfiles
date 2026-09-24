@@ -12,11 +12,11 @@ end, { desc = "Open dir in Finder" })
 map.set("n", "<C-d>", "<C-d>zz")
 map.set("n", "<C-u>", "<C-u>zz")
 
--- Reload every buffer whose file changed on disk (e.g. after an AI made edits
--- across many files). `:checktime` + autoread refreshes the unmodified ones so
--- the LSP stops diagnosing stale content; buffers with unsaved local changes
--- are left alone and reported instead of being clobbered.
-map.set("n", "<leader>br", "<cmd>checktime<cr>", { desc = "Reload changed buffers" })
+-- Reload every buffer (including hidden ones) whose file changed on disk and
+-- re-pull LSP diagnostics. See lua/config/reload.lua.
+map.set("n", "<leader>br", function()
+  require("config.reload").reload()
+end, { desc = "Reload changed buffers" })
 
 -- Removing Lazy defaults. Guarded: LazyVim no longer maps <leader>l by
 -- default, and an unguarded del() throws E31 and aborts the rest of this file.
