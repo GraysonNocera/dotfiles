@@ -160,3 +160,10 @@ export KEYTIMEOUT=1          # kill the Esc lag (default is 0.4s)
 bindkey '^?' backward-delete-char   # make backspace behave
 bindkey -M viins '^r' history-incremental-search-backward  # keep Ctrl-R
 
+# flutter (installed via git clone; see ~/dev/game-app/docs/DEV_SETUP.md)
+# flutter-bin/ holds wrappers that force native (arm64) bash for Flutter's
+# process tree — Intel Homebrew's x86 bash would otherwise pull it into Rosetta.
+export PATH="$HOME/development/flutter-bin:$HOME/development/flutter/bin:$PATH"
+export PATH="$PATH:$HOME/.pub-cache/bin"
+# CocoaPods needs a UTF-8 locale
+export LANG=en_US.UTF-8
