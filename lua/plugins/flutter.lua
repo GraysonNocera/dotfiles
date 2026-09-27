@@ -58,7 +58,7 @@ return {
         },
         lsp = {
           capabilities = ok and blink.get_lsp_capabilities() or nil,
-          color = { enabled = true },
+          -- No `color` option: nvim 0.12 highlights LSP document colors natively.
           settings = {
             showTodos = true,
             completeFunctionCalls = true,
