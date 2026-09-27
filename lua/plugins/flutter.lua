@@ -68,6 +68,13 @@ return {
           },
         },
       })
+
+      -- flutter-tools only creates its :Flutter* commands on BufEnter of a *.dart
+      -- or pubspec.yaml buffer, so the keymaps/cmds above would fail with "Not an
+      -- editor command" when triggered from anywhere else (dashboard, explorer...).
+      -- Fire that hook now; it's once-only and guarded, so a later real BufEnter
+      -- is a no-op.
+      vim.api.nvim_exec_autocmds("BufEnter", { group = "FlutterToolsGroup", pattern = "pubspec.yaml" })
     end,
   },
   {
