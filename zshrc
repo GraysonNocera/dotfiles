@@ -85,7 +85,7 @@ SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
 # History behavior.
-setopt SHARE_HISTORY        # instant history sharing across open terminals
+setopt INC_APPEND_HISTORY   # write to HISTFILE as you go, but each shell keeps its own history
 setopt HIST_IGNORE_ALL_DUPS # drop older duplicates of a repeated command
 setopt HIST_IGNORE_SPACE    # don't record commands that start with a space
 setopt HIST_REDUCE_BLANKS   # tidy up superfluous whitespace
