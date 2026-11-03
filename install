@@ -13,6 +13,7 @@ LINKS=(
   "vimrc:$HOME/.vimrc"
   "gitconfig:$HOME/.gitconfig"
   "ssh_rc:$HOME/.ssh/rc"
+  "ssh_config:$HOME/.ssh/config"
   "config/nvim:$HOME/.config/nvim"
   "config/git/ignore:$HOME/.config/git/ignore"
   "config/git/stack.sh:$HOME/.config/git/stack.sh"

@@ -16,6 +16,7 @@ The `install` script symlinks each one to its real home:
 | `vimrc`                     | `~/.vimrc`                      |
 | `gitconfig`                 | `~/.gitconfig`                  |
 | `ssh_rc`                    | `~/.ssh/rc`                     |
+| `ssh_config`                | `~/.ssh/config`                 |
 | `config/nvim/`              | `~/.config/nvim` (whole folder) |
 | `config/git/ignore`         | `~/.config/git/ignore`          |
 | `config/git/stack.sh`       | `~/.config/git/stack.sh`        |
@@ -24,6 +25,11 @@ The `install` script symlinks each one to its real home:
 
 Only nvim is linked as a whole folder; the rest are linked file by file because
 those apps keep state files next to their config (e.g. hunk's `state.json`).
+
+`ssh_config` only holds the GitHub setup. It includes `~/.ssh/config.local`
+first, so put servers and anything private or machine-specific there; it is
+never committed. On a machine that already had a `~/.ssh/config`, `install`
+moves it to `~/.ssh/config.bak`, so copy its hosts into `config.local`.
 
 To add a new dotfile: put it at the repo root, or under `config/<app>/` if it
 lives in `~/.config`, and add one line to the `LINKS` array in `install`.

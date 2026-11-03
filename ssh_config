@@ -1,0 +1,21 @@
+# UseKeychain is macOS-only; without this, Linux ssh rejects the whole file.
+IgnoreUnknown UseKeychain
+
+# Servers and anything else private or machine-specific go in
+# ~/.ssh/config.local, which is not in this public repo. Included first so
+# its settings win (ssh uses the first value it sees for each option).
+Include ~/.ssh/config.local
+
+# Personal repos (git@github.com) use only the personal key. The agent also
+# holds the Keytos EZSSH certificate, which GitHub rejects outside markeytos;
+# markeytos remotes connect as org-81049108@github.com, so they skip this
+# block and keep using the agent. It must come before "Host github.com"
+# because ssh uses the first value it sees for each option.
+Match host github.com user git
+  IdentitiesOnly yes
+  AddKeysToAgent no
+
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
