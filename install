@@ -20,6 +20,11 @@ LINKS=(
   "config/hunk/config.toml:$HOME/.config/hunk/config.toml"
 )
 
+# On macOS lazygit ignores ~/.config unless XDG_CONFIG_HOME is set.
+if [ "$(uname)" = "Darwin" ]; then
+  LINKS+=("config/lazygit/config.yml:$HOME/Library/Application Support/lazygit/config.yml")
+fi
+
 link() {
   local src="$1"
   local dest="$2"
