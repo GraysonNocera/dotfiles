@@ -1,0 +1,103 @@
+gui:
+  sidePanelWidth: 0.5
+  expandFocusedSidePanel: false
+  screenMode: normal
+git:
+  autoFetch: false
+customCommands:
+  - key: "<c-r>"
+    context: "localBranches"
+    description: "Stack: restack onto a base you pick"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Restack onto which base? (/ to search)"
+        key: "Base"
+        # Runs without a shell, so pipes need sh -c; backslashes would be eaten when splitting argv.
+        # Lists the current base first, then the other local branches, most recent first. Layers
+        # are labelled because they sort near the top and restacking onto one drops it from the stack.
+        command: >-
+          sh -c 'base=$(git config stack.base || echo master);
+          cur=$(git branch --show-current);
+          layers=$(git stack 2>/dev/null | grep -v "^! " | cut -d " " -f 1);
+          [ "$base" != "$cur" ] && git show-ref -q --verify "refs/heads/$base" && echo "$base (current base)";
+          git for-each-ref --sort=-committerdate --format="%(refname:short)" refs/heads/ |
+          while read -r b; do
+          if [ "$b" = "$base" ] || [ "$b" = "$cur" ]; then continue; fi;
+          if echo "$layers" | grep -qxF "$b"; then echo "$b (layer on $base)"; else echo "$b"; fi;
+          done'
+        filter: '^(?P<branch>[^ ]+)(?P<note>.*)$'
+        valueFormat: "{{ .branch }}"
+        labelFormat: "{{ .branch }}{{ .note }}"
+    command: "git stack-restack {{.Form.Base | quote}}"
+    output: "terminal"
+  - key: "<c-u>"
+    context: "localBranches"
+    description: "Stack: push every layer (atomic, force-with-lease)"
+    prompts:
+      - type: "confirm"
+        title: "Push the stack"
+        body: "Force-push every layer between the stack base and HEAD to origin?"
+    command: "git stack-push"
+    output: "terminal"
+  - key: "<c-f>"
+    context: "localBranches"
+    description: "Stack: fixup staged changes into the selected layer"
+    prompts:
+      - type: "confirm"
+        title: "Fixup into layer"
+        body: "Commit the staged changes into {{.SelectedLocalBranch.Name}} and restack the layers above it?"
+    command: "git stack-fixup {{.SelectedLocalBranch.Name | quote}}"
+    output: "terminal"
+  - key: "<c-a>"
+    context: "files, localBranches"
+    description: "Stack: absorb staged changes into the layers that last touched them"
+    command: "git stack-absorb"
+    output: "terminal"
+  - key: "<c-b>"
+    context: "localBranches"
+    description: "Stack: adopt a stray the stack is missing"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Adopt which stray? (only Cancel = nothing to adopt)"
+        key: "Stray"
+        command: >-
+          sh -c 'stack=$(git stack) || exit; echo "$stack" | grep "^! " | cut -d " " -f 2'
+    command: "git stack-adopt {{.Form.Stray | quote}}"
+    output: "terminal"
+  - key: "<c-d>"
+    context: "localBranches"
+    description: "Diff size vs nearest parent branch"
+    output: "popup"
+    command: |
+      cur=$(git branch --show-current)
+      best=""; min=""
+      for b in $(git for-each-ref --format='%(refname:short)' refs/heads); do
+        [ "$b" = "$cur" ] && continue
+        git merge-base --is-ancestor "$b" HEAD || continue
+        n=$(git rev-list --count "$b"..HEAD)
+        [ "$n" -eq 0 ] && continue
+        if [ -z "$min" ] || [ "$n" -lt "$min" ]; then min=$n; best=$b; fi
+      done
+      [ -z "$best" ] && { echo "No parent branch found"; exit 0; }
+      echo "$cur vs $best"
+      echo "$min commits"
+      git diff --shortstat "$best"...HEAD
+  - key: "<c-g>"
+    context: "localBranches"
+    description: "Show stack order"
+    output: "popup"
+    command: |
+      top=HEAD; max=0
+      for b in $(git for-each-ref --format='%(refname:short)' refs/heads); do
+        git merge-base --is-ancestor HEAD "$b" || continue
+        n=$(git rev-list --count origin/master.."$b")
+        if [ "$n" -gt "$max" ]; then max=$n; top=$b; fi
+      done
+      git log --format='%(decorate:prefix=,suffix=,separator= ,pointer=→ )' --simplify-by-decoration --decorate-refs=refs/heads --decorate-refs=HEAD origin/master.."$top"
+      echo; echo "Bottom to top:"
+      echo "origin/master $(git log --reverse --format='%(decorate:prefix=,suffix=,separator= ,pointer=)' --simplify-by-decoration --decorate-refs=refs/heads origin/master.."$top" | tr '\n' ' ')"
+  - key: "<c-l>"
+    context: "localBranches"
+    description: "Stack: show layers and strays (full screen)"
+    command: "git stack"
+    output: "terminal"

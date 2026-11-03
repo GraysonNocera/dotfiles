@@ -4,13 +4,20 @@ set -e
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Map each dotfile (relative to this repo) to its destination.
-# Flat repo layout -> real target paths under $HOME.
+# Top-level files go under $HOME; config/ mirrors ~/.config.
 LINKS=(
   "zshrc:$HOME/.zshrc"
   "bashrc:$HOME/.bashrc"
   "tmux.conf:$HOME/.tmux.conf"
   "ideavimrc:$HOME/.ideavimrc"
+  "vimrc:$HOME/.vimrc"
+  "gitconfig:$HOME/.gitconfig"
   "ssh_rc:$HOME/.ssh/rc"
+  "config/nvim:$HOME/.config/nvim"
+  "config/git/ignore:$HOME/.config/git/ignore"
+  "config/git/stack.sh:$HOME/.config/git/stack.sh"
+  "config/lazygit/config.yml:$HOME/.config/lazygit/config.yml"
+  "config/hunk/config.toml:$HOME/.config/hunk/config.toml"
 )
 
 link() {
@@ -26,7 +33,8 @@ link() {
   fi
 
   echo "Linking $src -> $dest"
-  ln -sf "$src" "$dest"
+  # -n: replace an existing link to a directory instead of linking inside it.
+  ln -sfn "$src" "$dest"
 }
 
 for entry in "${LINKS[@]}"; do

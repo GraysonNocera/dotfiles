@@ -1,0 +1,29 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Grayson Nocera
+	email = graysonnocera19@gmail.com
+[alias]
+	update-all-from-master = "!f() { \\\n  for b in $(git for-each-ref --format=\"%(refname:short)\" refs/heads/); do \\\n    echo \"Updating $b\"; \\\n    git checkout \"$b\" && git pull origin master || exit 1; \\\n  done; \\\n}; f"
+	stack = !sh ~/.config/git/stack.sh status
+	stack-restack = !sh ~/.config/git/stack.sh restack
+	stack-push = !sh ~/.config/git/stack.sh push
+	stack-fixup = !sh ~/.config/git/stack.sh fixup
+	stack-absorb = !sh ~/.config/git/stack.sh absorb
+	stack-adopt = !sh ~/.config/git/stack.sh adopt
+[push]
+	autoSetupRemote = true
+	default = current
+	useForceIfIncludes = true
+[rebase]
+	updateRefs = true
+	autoStash = true
+[pull]
+	rebase = true
+[rerere]
+	enabled = true
+[merge]
+	conflictStyle = zdiff3
+	tool = vscode
+[absorb]
+	fixupTargetAlwaysSHA = true
