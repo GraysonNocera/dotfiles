@@ -90,6 +90,7 @@ lazygit binds them in the Local branches panel (`ctrl+a` works in Files too):
 | --- | ---- |
 | `ctrl+l` | `git stack`, full screen |
 | `ctrl+r` | a menu of your local branches (current base first, then most recent, with layers labelled; `/` searches, Enter twice picks), then `git stack-restack` onto the one you pick |
+| `B` | the same menu, then `git config stack.base` to the one you pick (no fetch, no rebase) and `git stack`; use it to undo restacking onto one of your layers |
 | `ctrl+u` | `git stack-push`, after a confirm |
 | `ctrl+f` | `git stack-fixup` on the selected branch, after a confirm |
 | `ctrl+a` | `git stack-absorb` |

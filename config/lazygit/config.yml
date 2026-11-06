@@ -30,6 +30,29 @@ customCommands:
         labelFormat: "{{ .branch }}{{ .note }}"
     command: "git stack-restack {{.Form.Base | quote}}"
     output: "terminal"
+  - key: "B"
+    context: "localBranches"
+    description: "Stack: set the base without rebasing"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Set stack.base to which branch? No rebase. (/ to search)"
+        key: "Base"
+        # Same list as <c-r>: lazygit's config migration rejects YAML anchors and aliases.
+        command: >-
+          sh -c 'base=$(git config stack.base || echo master);
+          cur=$(git branch --show-current);
+          layers=$(git stack 2>/dev/null | grep -v "^! " | cut -d " " -f 1);
+          [ "$base" != "$cur" ] && git show-ref -q --verify "refs/heads/$base" && echo "$base (current base)";
+          git for-each-ref --sort=-committerdate --format="%(refname:short)" refs/heads/ |
+          while read -r b; do
+          if [ "$b" = "$base" ] || [ "$b" = "$cur" ]; then continue; fi;
+          if echo "$layers" | grep -qxF "$b"; then echo "$b (layer on $base)"; else echo "$b"; fi;
+          done'
+        filter: '^(?P<branch>[^ ]+)(?P<note>.*)$'
+        valueFormat: "{{ .branch }}"
+        labelFormat: "{{ .branch }}{{ .note }}"
+    command: "git config stack.base {{.Form.Base | quote}} && git stack"
+    output: "terminal"
   - key: "<c-u>"
     context: "localBranches"
     description: "Stack: push every layer (atomic, force-with-lease)"
